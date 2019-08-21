@@ -2,7 +2,9 @@
 
 module Circuit.Adornt.Simulator (
 	-- * Circuit Simulator
-	CircuitSimulator, prepareSimulator, step,
+	CircuitSimulator,
+	prepareSimulator, prepareSimulatorRandom, prepareSimulatorRandomIO,
+	step,
 
 	-- * Set Bits of Input Wire
 	IWire, setBits, setMultiBits,
@@ -15,6 +17,7 @@ module Circuit.Adornt.Simulator (
 	) where
 
 import Data.Word
+import System.Random
 
 import CircuitCore
 
@@ -26,3 +29,9 @@ setMultiBits is vs = foldr (.) id $ zipWith setBits is (wordToBits <$> vs)
 
 peekMultiOWires :: [OWire] -> CircuitSimulator -> [Word64]
 peekMultiOWires os cct = bitsToWord . (`peekOWire` cct) <$> os
+
+prepareSimulatorRandom :: RandomGen g => g -> CircuitBuilder a -> (a, CircuitSimulator)
+prepareSimulatorRandom g = prepareSimulator (wordToBits <$> randoms g)
+
+prepareSimulatorRandomIO :: CircuitBuilder a -> IO (a, CircuitSimulator)
+prepareSimulatorRandomIO cb = (`prepareSimulatorRandom` cb) <$> newStdGen
