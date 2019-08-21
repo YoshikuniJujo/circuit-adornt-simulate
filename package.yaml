@@ -21,20 +21,15 @@ description:         Please see the README on GitHub at <https://github.com/gith
 
 dependencies:
 - base >= 4.7 && < 5
+- monads-tf
+- containers
+- array
+- circuit-adornt-build
 
 library:
   source-dirs: src
-
-executables:
-  circuit-adornt-simulate-exe:
-    main:                Main.hs
-    source-dirs:         app
-    ghc-options:
-    - -threaded
-    - -rtsopts
-    - -with-rtsopts=-N
-    dependencies:
-    - circuit-adornt-simulate
+  exposed-modules:
+    - Circuit.Adornt.Simulator
 
 tests:
   circuit-adornt-simulate-test:
