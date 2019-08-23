@@ -37,8 +37,8 @@ makeCircuit ibs cb = (x ,) $ Circuit {
 	cctGate = gs, cctWireConn = wc,
 	cctWireStt = fromList $ (makeWireState dm `mapM` (iwsfg ++ iwsfo)) `evalState` ibs }
 	where
-	(x, CBState { cbsGate = gs, cbsWireConn = wc, cbsDelay = dm }) =
-		cb `runState` initCBState
+	(x, cbs) = cb `runState` initCBState
+	gs = cbsGate cbs; wc = cbsWireConn cbs; dm = cbsDelay cbs
 	iwsfg = gateWires =<< elems gs
 	iwsfo = catMaybes $ triIWire <$> keys gs
 
